@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-    if (document.querySelector('.menu-selection')) {
-        // Logic for landing.html
+    const pageName = window.location.pathname.split("/").pop();
+
+    if (pageName === 'index.html' || pageName === '') { // This is the landing page
         const buttons = document.querySelectorAll('.menu-selection button');
         const gifUrl = 'https://media.giphy.com/media/63x2s0n3k3yQ8/giphy.gif';
 
@@ -18,8 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     let x = cursorX;
                     let y = cursorY;
-                    let vx = (Math.random() - 0.5) * 20; // Horizontal velocity
-                    let vy = -Math.random() * 20;       // Initial vertical velocity
+                    let vx = (Math.random() - 0.5) * 20;
+                    let vy = -Math.random() * 20;
                     const gravity = 0.5;
 
                     const animate = () => {
@@ -36,13 +37,11 @@ document.addEventListener('DOMContentLoaded', () => {
                             gif.remove();
                         }
                     };
-
                     requestAnimationFrame(animate);
                 }
             });
         });
-    } else {
-        // Logic for index.html (SPA)
+    } else if (pageName === 'home.html') { // This is the SPA page
         const contentDiv = document.createElement('div');
         contentDiv.id = 'content';
         document.body.appendChild(contentDiv);
@@ -58,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
             contentDiv.innerHTML = content;
 
             document.querySelectorAll('.navbar a').forEach(a => {
-                if (a.getAttribute('href') === `?menu=${menu}`) {
+                if (a.getAttribute('href') === `home.html?menu=${menu}`) {
                     a.classList.add('active');
                 } else {
                     a.classList.remove('active');
@@ -68,14 +67,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const handleNavigation = (e) => {
             const link = e.currentTarget;
-            if (link.getAttribute('href') === 'landing.html') {
-                return; // Allow normal navigation to landing.html
+            if (link.getAttribute('href') === 'index.html') {
+                return; // Allow normal navigation to index.html
             }
 
             e.preventDefault();
             const url = new URL(link.href);
             const menu = url.searchParams.get('menu');
-            history.pushState({ menu }, '', `?menu=${menu}`);
+            history.pushState({ menu }, '', `home.html?menu=${menu}`);
             navigate(menu);
         };
 
@@ -90,7 +89,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Initial load
         const initialMenu = new URLSearchParams(window.location.search).get('menu');
         if (initialMenu) {
             navigate(initialMenu);
